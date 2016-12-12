@@ -1,0 +1,335 @@
+
+Symfony Jour 1
+
+
+
+
+Installation
+	
+    Installer Symfony préconisé par SensioLabs
+    
+    Utiisation de Composer comme gestionnaire de dépendances
+    
+    
+    1/ Installation du Symfony Installer
+    2/ symfony new nom_du_projet
+    3/ composer install
+    
+    
+    !! Attention aux drois des dossiers et aux modules requis !!
+    
+    php $PATH_SYMFONY/bin/symfony_requirements
+    
+    Va tester l'environnement, le serveur et ses modules.
+    Indispensable avant d'aller plus loin
+    
+    
+    
+    
+    
+Architecture des dossiers de Symfony
+
+	app
+    	config
+    
+    bin
+    	
+        Binaires de Symfony 
+        	(console, symfony_requirements)
+    
+	src
+    	AppBundle
+        
+	tests
+        
+	web
+    
+    vendors
+
+
+
+
+    
+Lignes de commande
+
+	 sudo php bin/console cache:clear
+     
+     sudo php bin/console debug:router nom_de_la_route
+ 
+ 
+ 
+ 
+Routing
+
+
+	avec les annotations
+    
+    	/**
+        * @Method( {"POST"} )
+        * @Route(
+        *   "/hello/{name}",
+        *   name="Route_hello_someone",
+        *   requirements={
+        *       "name": "fabrice|sylvia"
+        *   })
+        */
+    
+    
+    ou avec un fichier YAML
+    	app/config/routing.yml
+        
+        
+        
+        
+    Exemple d'une route (en annotation) avec un paramètre    
+        
+    {# src/AppBundle/Controller/DefaultController.php #}
+    
+    <?php    	
+        
+    	/* .................. */
+        use Symfony\Component\HttpFoundation\Response;
+        use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+        /* .................. */
+        
+        
+        /**
+        * @Method( {"POST"} )
+        * @Route(
+        *   "/hello/{name}",
+        *   name="Route_hello_someone",
+        *   requirements={
+        *       "name": "fabrice|sylvia"
+        *   })
+        */
+        public function helloSomeoneAction(Request $request)
+        {
+           // Récupération du nom
+           $name = $request->attributes->get('name');
+
+            return new Response(
+               '<html><body>Route Hello Someone hello: '.$name.'</body></html>'
+           );
+
+        }
+        
+        /* .................. */
+    ?>
+    
+ 
+ 
+ 
+    
+    Redirection
+    
+        Exemple d'une redirection de /helloRoute vers /hello/sylvia
+        
+
+        {# src/AppBundle/Controller/DefaultController.php #}
+
+        <?php   
+
+            /* .................. */
+
+            /**
+            * @Route("/helloRoute", name="helloRoute")
+            */
+            public function helloRouteAction(Request $request)
+            {                
+                return $this->redirectToRoute('Route_hello_someone',array('name' => 'sylvia'));
+            }
+
+            /* .................. */
+		?>
+ 
+ 
+ 
+    
+    Renvoyer une page d'erreur
+    
+    
+    	Exemple d'un renvoi d'une erreur 404
+        
+
+        {# src/AppBundle/Controller/DefaultController.php #}
+
+        <?php   
+
+            /* .................. */
+            use Symfony\Component\HttpKernel\Exception\HttpException;
+            /* .................. */
+            
+
+            /**
+            * @Route("/helloRouteErreur", name="helloRouteErreur")
+            */
+            public function helloRouteErreurAction(Request $request)
+            {     
+            	// recherche de l'article
+                $article = null;
+                
+                // Test de l'article
+                if ( !$article) {
+                	throw new HttpException(
+                    	404,
+                        'Cet article n`existe pas'
+                    );
+                }
+            }
+
+            /* .................. */
+		?>
+        
+        
+        
+        
+        
+	Utilisation d'un template Twig
+    
+    	Rendu d'un fichier twig
+        
+        	Dans notre action de controlleur, utilisation de la méthode "render"
+            
+            	{# src/AppBundle/Controller/DefaultController.php #}                
+	            	return $this->render('AppBundle:default:hello.html.twig');
+            
+            
+            
+			Dans le fichier template
+            
+            
+            	{# src/AppBundle/Resources/views/default/hello.html.twig #}
+                Hello World!
+                
+            
+            
+            
+            
+		Passage d'un paramètre au fichier Twig
+        
+        
+            {# src/AppBundle/Controller/DefaultController.php #}
+            <?php
+            
+            	/* .................. */
+                
+                
+                /**
+                 * @Route("/helloVue", name="Hello Vue")
+                 */
+                public function helloVueAction(Request $request)
+                {
+                    // Vue depuis le dossier App
+                        // Solution préconisée par SensioLabs
+                        // Utile dans le cas d'une application unique
+                        //return $this->render('default/hello.html.twig');
+
+
+                    // Vue depuis la vue dans le bundle
+                        // Utile dans le cas où l'on souhaite partager son Bundle
+                        return $this->render('AppBundle:default:hello.html.twig',
+                            [ 'name' => "Sylvia" ]
+                        );
+                }
+                
+                /* .................. */
+			?>
+              
+              
+              
+                
+		Surcharge de fichiers templates
+        
+        
+        	Par défaut, Symfony préconise de placer ses templates dans `app\Resources\views` dans le cas où on développe une application générique.
+            
+            
+            
+            {# src/AppBundle/Controller/DefaultController.php #}
+            <?php
+            	return $this->render('default/index.html.twig');
+            ?>
+                        
+            
+            {# app/Resources/views/default/index.html.twig #} 
+                {% extends 'base.html.twig' %}
+
+                {% block title %}Titre de la page{% endblock %}
+				/* .................. */
+                
+                
+                
+                
+                
+            
+            Si on développe un bundle destiné à être partagé, on peut joindre des templates au sein même du bundle dans:
+            
+            {# src/AppBundle/Resources/views/default/index.html.twig #}
+            Fichier Twig spécifique au Bundle
+            
+            {# src/AppBundle/Controller/DefaultController.php #}
+            <?php
+            	return $this->render('AppBundle:default:index.html.twig');
+            ?>
+            
+            
+            
+            Enfin, on peut surcharger le template du bundle dans
+            
+            {# app/Resources/AppBundle/Resources/views/default/index.html.twig #} 
+            	Template du Bundle surchargé
+                
+                
+                
+                
+                
+            
+            
+            
+
+		Renvoi de données Web ou Json en fonction d'un paramètre donné dans la route
+        	
+            
+            
+        	{# src/AppBundle/Controller/DefaultController.php #}
+            <?php
+            	 /* .................. */
+            	 use Symfony\Component\HttpFoundation\JsonResponse;
+                 /* .................. */
+                 
+                 
+            
+            	/**
+                 * @Route("/{format}/hello/all", name="Hello_All_Json_Web")
+                 */
+                // needs use Symfony\Component\HttpFoundation\JsonResponse;
+                public function Hello_All_Json_WebAction(Request $request, $format)
+                {
+                    $output = array ('Sylvia', 'Fabrice', 'Nicolas');
+
+                    switch ( $format){
+                        case "json":
+
+                            return new JsonResponse(array('output' => $output));
+
+                            break;
+                        case "web":
+                        default:
+                            
+                            return $this->render('AppBundle:default:Hello_All_Json_Web.html.twig',
+                                [ 'output' => $output ]
+                            );
+
+                            break;
+                    }
+                }
+                /* .................. */
+			?>
+            
+            
+            
+            {# src/AppBundle/Resources/views/default/Hello_All_Json_Web.html.twig #}            
+                Output en Twig
+                {% for name in output %}
+                    {{ name }}
+                {% endfor %}
