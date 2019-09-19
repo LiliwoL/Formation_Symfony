@@ -63,7 +63,17 @@ class IndexController extends Controller
 EOL;
         $output .= "</pre>";
         
-        return new Response ( $output );
+        // Création d'un objet Response
+        $response = new Response ($output);
+
+        // Header avec un mime type
+        // https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
+        $response->headers->set('Content-Type', 'text/html');
+
+        // Code de réponse
+        $response->setStatusCode(Response::HTTP_OK);
+        
+        return $response;
     }
 
 
