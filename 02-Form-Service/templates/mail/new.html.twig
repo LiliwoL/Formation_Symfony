@@ -6,19 +6,35 @@
 
 
 {% block body %}
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <h1>Formulaire unique</h1>
+    {{ form_start(formulaireUnique, {'attr': {'novalidate': 'novalidate'}}) }}
 
     <div id="sender" style="background: #0ab8d1;">
         {# Le label #}
-        {{ form_label(form.sender) }}
+        {{ form_label(formulaireUnique.sender) }}
 
-        {{ form_widget(form.sender) }}
+        {{ form_widget(formulaireUnique.sender) }}
 
-        {{ form_errors(form.sender) }}
+        {{ form_errors(formulaireUnique.sender) }}
     </div>
+    {{ form_end(formulaireUnique) }}
 
+    <hr>
 
-    {{ form_end(form) }}
+    <h1>Formulaire réutilisable</h1>
+    {{ form_start(formulaireReutilisable, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div id="sender" style="background: #0ab8d1;">
+        {# Le label #}
+        {{ form_label(formulaireReutilisable.sender) }}
+
+        {{ form_widget(formulaireReutilisable.sender) }}
+
+        {{ form_errors(formulaireReutilisable.sender) }}
+    </div>
+    {{ form_end(formulaireReutilisable) }}
+
+    <hr>
 
     Afficher la variable:
     {{ variable|upper }}
