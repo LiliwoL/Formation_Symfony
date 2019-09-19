@@ -1,0 +1,32 @@
+{# templates/mail/new.html.twig #}
+
+{% extends 'base.html.twig'  %}
+
+{% block title %}Des formulaires!!{% endblock %}
+
+
+{% block body %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div id="sender" style="background: #0ab8d1;">
+        {# Le label #}
+        {{ form_label(form.sender) }}
+
+        {{ form_widget(form.sender) }}
+
+        {{ form_errors(form.sender) }}
+    </div>
+
+
+    {{ form_end(form) }}
+
+    Afficher la variable:
+    {{ variable|upper }}
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+
+    </script>
+{% endblock %}
