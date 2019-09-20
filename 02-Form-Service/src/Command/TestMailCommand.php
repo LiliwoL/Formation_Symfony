@@ -15,7 +15,7 @@ final class TestMailCommand extends Command
             ->setName('app:test-mail')
 
             // the short description shown while running "php bin/console list"
-            ->setDescription('Senss a test mail.')
+            ->setDescription('Sends a test mail.')
 
             // the full command description shown when running the command with
             // the "--help" option
@@ -51,7 +51,6 @@ final class TestMailCommand extends Command
         $output->writeln('Whoa!');
 
         // outputs a message without adding a "\n" at the end of the line
-        $output->write('You are about to ');
-        $output->write('create a user.');
+        $output->write('Mail envoyé? ');
     }
 }

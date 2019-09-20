@@ -2,4 +2,4 @@
 swiftmailer:
     # send all emails to a specific address
     #delivery_addresses: ['me@example.com']
-    url: smtp://smtp.maap.io:525?encryption=tls&auth_mode=login&username=fc39e69c00b4e8&password=918b915095d687
+    url: smtp://smtp.mailtrap.io:2525?encryption=tls&auth_mode=login&username=a01278339e03ac&password=079e3d0a3a9a8b
